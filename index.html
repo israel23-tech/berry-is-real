@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10101a">
+<meta name="description" content="Berry_is real — discover STEM, animated drama, community stories and creators.">
+<title>Berry_is real</title>
+
+<style>
+:root {
+  --bg: #10101a;
+  --panel: #1b1b29;
+  --panel2: #242438;
+  --text: #ffffff;
+  --muted: #aaaabd;
+  --pink: #ff3b81;
+  --purple: #a855f7;
+  --blue: #38bdf8;
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --border: rgba(255,255,255,.12);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(16,16,26,.96);
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -.8px;
+}
+.brand span {
+  background: linear-gradient(90deg, #ff3b81, #a855f7, #38bdf8);
+  color: transparent;
+  background-clip: text;
+}
+.header-btn {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--panel);
+  color: white;
+  padding: 9px 12px;
+}
+main { max-width: 760px; margin: auto; padding: 14px 12px 100px; }
+h1 { font-size: 25px; margin: 12px 0 6px; }
+.subtitle { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.categories {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 14px 0;
+  scrollbar-width: none;
+}
+.categories::-webkit-scrollbar { display: none; }
+.cat {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--panel);
+  color: white;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.cat.active { background: white; color: #171724; border-color: white; }
+.cat[data-cat="STEM"] { border-bottom: 3px solid var(--blue); }
+.cat[data-cat="DRAMA"] { border-bottom: 3px solid var(--purple); }
+.cat[data-cat="COMMUNITY"] { border-bottom: 3px solid var(--green); }
+.cat[data-cat="FOLLOWING"] { border-bottom: 3px solid var(--pink); }
+.cat[data-cat="FOR YOU"] { border-bottom: 3px solid var(--yellow); }
+
+.feed { display: grid; gap: 18px; }
+.post {
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+.art {
+  position: relative;
+  min-height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  overflow: hidden;
+}
+.art:before, .art:after {
+  content: "";
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.10);
+}
+.art:before { top: -100px; left: -65px; }
+.art:after { bottom: -120px; right: -60px; }
+.art-content { position: relative; z-index: 1; }
+.art-emoji { font-size: 72px; filter: drop-shadow(0 8px 15px #0004); }
+.art h2 { font-size: 25px; margin: 12px 0; }
+.art p { max-width: 330px; line-height: 1.5; margin: auto; }
+.stem { background: linear-gradient(140deg,#075985,#2563eb,#22d3ee); }
+.drama { background: linear-gradient(140deg,#581c87,#a21caf,#fb7185); }
+.community { background: linear-gradient(140deg,#065f46,#16a34a,#bef264); color: #092c1e; }
+.following { background: linear-gradient(140deg,#9d174d,#e11d48,#fb7185); }
+.foryou { background: linear-gradient(140deg,#713f12,#ea580c,#facc15); }
+.tag {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 7px 10px;
+  border-radius: 18px;
+  background: #0003;
+  font-size: 11px;
+  font-weight: 800;
+}
+.post-info { padding: 14px; }
+.creator-row { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  width: 40px; height: 40px; flex: 0 0 40px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg,var(--pink),var(--purple));
+  font-weight: 900;
+}
+.creator { font-weight: 800; }
+.handle { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.follow-btn {
+  margin-left: auto;
+  border: 0;
+  border-radius: 20px;
+  padding: 9px 13px;
+  background: var(--pink);
+  color: white;
+  font-weight: 800;
+}
+.post-title { font-size: 17px; font-weight: 800; margin: 13px 0 6px; }
+.caption { color: #dedee9; line-height: 1.5; font-size: 14px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+.action {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: white;
+  padding: 9px 11px;
+  font-size: 12px;
+}
+.action.liked { color: #ff6b9d; }
+.empty {
+  padding: 30px 15px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--panel);
+  border-radius: 16px;
+}
+.page { display: none; }
+.page.active { display: block; }
+.searchbox, .field {
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0;
+  background: var(--panel);
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+textarea.field { min-height: 95px; resize: vertical; }
+.primary {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+  background: linear-gradient(90deg,var(--pink),var(--purple));
+  color: white;
+  font-weight: 900;
+}
+.preview {
+  width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  margin-top: 10px;
+  border-radius: 12px;
+  background: black;
+}
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 2px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(20,20,32,.98);
+  border-top: 1px solid var(--border);
+}
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.nav-btn span { display: block; font-size: 21px; margin-bottom: 4px; }
+.nav-btn.active { color: #ff6b9d; }
+.small-note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+footer { text-align: center; color: var(--muted); padding: 25px 8px; font-size: 12px; }
+@media(min-width:600px) {
+  main { padding-top: 22px; }
+  .art { min-height: 360px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">🍓 <span>Berry_is real</span></div>
+  <button class="header-btn" onclick="showPage('discover')">🔎 Discover</button>
+</header>
+
+<main>
+  <section id="home" class="page active">
+    <h1>Discover your world ✨</h1>
+    <div class="subtitle">Learn something. Watch a story. Find your people.</div>
+
+    <div class="categories" id="categories">
+      <button class="cat" data-cat="STEM" onclick="setCategory('STEM')">🔬 STEM</button>
+      <button class="cat" data-cat="DRAMA" onclick="setCategory('DRAMA')">🎭 DRAMA</button>
+      <button class="cat" data-cat="COMMUNITY" onclick="setCategory('COMMUNITY')">🤝 COMMUNITY</button>
+      <button class="cat" data-cat="FOLLOWING" onclick="setCategory('FOLLOWING')">❤️ FOLLOWING</button>
+      <button class="cat active" data-cat="FOR YOU" onclick="setCategory('FOR YOU')">✨ FOR YOU</button>
+    </div>
+
+    <div class="feed" id="feed"></div>
+    <button class="primary" onclick="loadMore()">Show more videos ↓</button>
+    <p class="small-note">Demo content is illustrative. Real videos appear after creators upload them.</p>
+  </section>
+
+  <section id="discover" class="page">
+    <h1>Discover 🔎</h1>
+    <p class="subtitle">Search topics, creators and stories.</p>
+    <input id="search" class="searchbox" placeholder="Search STEM, oceans, drama..." oninput="searchPosts()">
+    <div id="search-results" class="feed"></div>
+  </section>
+
+  <section id="create" class="page">
+    <h1>Create a post 🎬</h1>
+    <p class="subtitle">Choose a video or photo from your device. This demo previews it locally; it does not upload it to a shared server.</p>
+    <form id="post-form">
+      <label for="media">Choose photo or video</label>
+      <input class="field" id="media" type="file" accept="image/*,video/*">
+      <video id="video-preview" class="preview" controls playsinline hidden></video>
+      <img id="image-preview" class="preview" alt="Selected media preview" hidden>
+      <label for="post-category">Category</label>
+      <select id="post-category" class="field">
+        <option>STEM</option>
+        <option>DRAMA</option>
+        <option>COMMUNITY</option>
+      </select>
+      <label for="post-title">Title</label>
+      <input id="post-title" class="field" maxlength="100" required placeholder="Give your post a title">
+      <label for="post-caption">Description</label>
+      <textarea id="post-caption" class="field" maxlength="500" placeholder="Tell viewers about your post"></textarea>
+      <button class="primary" type="submit">Preview post</button>
+    </form>
+    <p id="create-status" class="small-note"></p>
+  </section>
+
+  <section id="inbox" class="page">
+    <h1>Inbox 💌</h1>
+    <div class="empty">
+      <div style="font-size:45px">💬</div>
+      <h3>Your conversations start here</h3>
+      <p>Messaging and notifications will need a backend and real user accounts before they can work across devices.</p>
+    </div>
+  </section>
+
+  <section id="profile" class="page">
+    <h1>Your profile 👤</h1>
+    <div class="empty">
+      <div style="font-size:55px">🍓</div>
+      <h2 id="profile-name">Berry Creator</h2>
+      <p id="profile-bio">Learning, creating and sharing.</p>
+      <p id="profile-count">0 local posts</p>
+    </div>
+    <h3>Edit your demo profile</h3>
+    <input id="edit-name" class="field" maxlength="40" placeholder="Display name">
+    <textarea id="edit-bio" class="field" maxlength="160" placeholder="Short bio"></textarea>
+    <button class="primary" onclick="saveProfile()">Save profile on this device</button>
+    <p class="small-note">Profile details are stored only in this browser for this prototype.</p>
+  </section>
+
+  <footer>Berry_is real 🍓 · Learn · Create · Connect</footer>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="home" onclick="showPage('home')"><span>⌂</span>Home</button>
+  <button class="nav-btn" data-page="discover" onclick="showPage('discover')"><span>⌕</span>Discover</button>
+  <button class="nav-btn" data-page="create" onclick="showPage('create')"><span>＋</span>Create</button>
+  <button class="nav-btn" data-page="inbox" onclick="showPage('inbox')"><span>♡</span>Inbox</button>
+  <button class="nav-btn" data-page="profile" onclick="showPage('profile')"><span>♙</span>Profile</button>
+</nav>
+
+<script>
+"use strict";
+
+const demoPosts = [
+  {id:1,cat:"STEM",emoji:"🌊",art:"stem",title:"Explore the hidden world of the ocean",caption:"Discover ocean zones, underwater life and the mysteries of our blue planet. Start your learning journey here!",creator:"Ocean Classroom",handle:"@oceanclassroom",series:"Ocean Explorers · Episode 1",tags:"#Ocean #Science #STEM"},
+  {id:2,cat:"DRAMA",emoji:"🌌",art:"drama",title:"The Secret of Moonlight City",caption:"A young inventor discovers a mysterious signal that changes everything. Follow the story as new episodes arrive.",creator:"DreamFrame Studio",handle:"@dreamframestudio",series:"Moonlight City · Episode 1",tags:"#Animation #Drama #Story"},
+  {id:3,cat:"COMMUNITY",emoji:"🏔️",art:"community",title:"One team, one mountain",caption:"A group of friends work together through a tough mountain challenge. Everyone brings a different strength.",creator:"Together Project",handle:"@togetherproject",series:"Standalone community story",tags:"#Teamwork #Community"},
+  {id:4,cat:"STEM",emoji:"🧪",art:"stem",title:"Math made easier: patterns everywhere",caption:"Numbers, shapes and patterns are all around us. Learn to spot them with simple examples.",creator:"Bright Minds",handle:"@brightminds",series:"Math Made Simple · Episode 1",tags:"#Math #Learning"},
+  {id:5,cat:"DRAMA",emoji:"🦊",art:"drama",title:"The Little Fox and the Star",caption:"An animated adventure about courage, friendship and the star that fell into the forest.",creator:"Little Lantern",handle:"@littlelantern",series:"Forest Tales · Episode 1",tags:"#Animation #Adventure"},
+  {id:6,cat:"COMMUNITY",emoji:"❄️",art:"community",title:"Helping hands in the snow",caption:"When a winter storm blocks the road, neighbours work together to help everyone get home safely.",creator:"Good Neighbours",handle:"@goodneighbours",series:"Standalone community story",tags:"#Community #Helping"},
+  {id:7,cat:"STEM",emoji:"🐬",art:"stem",title:"Meet the amazing animals of the sea",caption:"From dolphins to tiny plankton, learn how marine animals survive and support ocean ecosystems.",creator:"Ocean Classroom",handle:"@oceanclassroom",series:"Ocean Explorers · Episode 2",tags:"#AquaticLife #Animals"},
+  {id:8,cat:"DRAMA",emoji:"🚀",art:"drama",title:"Mission: The Red Planet",caption:"A young crew faces unexpected problems on a journey to Mars. Can they solve them together?",creator:"DreamFrame Studio",handle:"@dreamframestudio",series:"Starbound · Episode 1",tags:"#SciFi #Drama"}
+];
+
+let posts = [...demoPosts];
+let category = "FOR YOU";
+let moreCount = 0;
+let selectedMediaURL = "";
+let following = new Set();
+let liked = new Set();
+let comments = {};
+let userName = "Berry Creator";
+let userBio = "Learning, creating and sharing.";
+
+function safeText(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[ch]);
+}
+
+function getVisiblePosts() {
+  if (category === "FOR YOU") return posts;
+  if (category === "FOLLOWING") return posts.filter(p => following.has(p.creator));
+  return posts.filter(p => p.cat === category);
+}
+
+function setCategory(cat) {
+  category = cat;
+  document.querySelectorAll(".cat").forEach(b =>
+    b.classList.toggle("active", b.dataset.cat === cat)
+  );
+  renderFeed();
+}
+
+function renderCards(list, targetId) {
+  const target = document.getElementById(targetId);
+  if (!list.length) {
+    target.innerHTML = '<div class="empty">Nothing here yet. Follow a creator or explore another category. 🍓</div>';
+    return;
+  }
+
+  target.innerHTML = list.map(p => `
+    <article class="post">
+      <div class="art ${p.art || 'foryou'}">
+        <div class="art-content">
+          <div class="art-emoji">${safeText(p.emoji || "🍓")}</div>
+          <h2>${safeText(p.title)}</h2>
+          <p>${safeText(p.series || p.cat)}</p>
+          <span class="tag">${safeText(p.cat)} · DEMO PREVIEW</span>
+        </div>
+      </div>
+      <div class="post-info">
+        <div class="creator-row">
+          <div class="avatar">${safeText((p.creator || "B").charAt(0).toUpperCase())}</div>
+          <div><div class="creator">${safeText(p.creator)}</div><div class="handle">${safeText(p.handle || "@creator")}</div></div>
+          <button class="follow-btn" onclick="toggleFollow('${safeText(p.creator)}')">${following.has(p.creator) ? "Following" : "＋ Follow"}</button>
+        </div>
+        <div class="post-title">${safeText(p.title)}</div>
+        <div class="caption">${safeText(p.caption)}</div>
+        <div class="caption" style="margin-top:8px;color:#b9a4ff">${safeText(p.tags || "")}</div>
+        <div class="actions">
+          <button class="action ${liked.has(p.id) ? 'liked' : ''}" onclick="toggleLike(${p.id})">${liked.has(p.id) ? '❤️ Liked' : '♡ Like'} · ${p.likes || 0 + (liked.has(p.id) ? 1 : 0)}</button>
+          <button class="action" onclick="addComment(${p.id})">💬 Comment (${(comments[p.id] || []).length})</button>
+          <button class="action" onclick="sharePost('${safeText(p.title)}')">↗ Share</button>
+        </div>
+        ${(comments[p.id] || []).map(c => `<p class="small-note">💬 ${safeText(c)}</p>`).join("")}
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderFeed() {
+  renderCards(getVisiblePosts(), "feed");
+  document.getElementById("profile-count").textContent =
+    posts.filter(p => p.local).length + " local posts";
+}
+
+function loadMore() {
+  const templates = demoPosts.filter(p => p.cat === category || category === "FOR YOU");
+  if (!templates.length) {
+    alert("No posts in this category yet. Try FOR YOU or follow a creator.");
+    return;
+  }
+  moreCount++;
+  const template = templates[(moreCount - 1) % templates.length];
+  posts.push({...template, id:Date.now() + moreCount, title:template.title + " · Part " + (moreCount + 1)});
+  renderFeed();
+}
+
+function toggleFollow(name) {
+  if (following.has(name)) following.delete(name);
+  else following.add(name);
+  renderFeed();
+}
+
+function toggleLike(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  if (liked.has(id)) {
+    liked.delete(id);
+    post.likes = Math.max(0, (post.likes || 1) - 1);
+  } else {
+    liked.add(id);
+    post.likes = (post.likes || 0) + 1;
+  }
+  renderFeed();
+}
+
+function addComment(id) {
+  const comment = prompt("Write a comment:");
+  if (!comment || !comment.trim()) return;
+  if (comment.length > 300) {
+    alert("Please keep your comment under 300 characters.");
+    return;
+  }
+  if (!comments[id]) comments[id] = [];
+  comments[id].push(comment.trim());
+  renderFeed();
+}
+
+async function sharePost(title) {
+  const text = "Check out " + title + " on Berry_is real!";
+  if (navigator.share) {
+    try { await navigator.share({title:"Berry_is real", text}); } catch (e) {}
+  } else if (navigator.clipboard) {
+    try { await navigator.clipboard.writeText(text); alert("Share text copied!"); }
+    catch (e) { alert(text); }
+  } else alert(text);
+}
+
+function showPage(name) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(name).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.page === name)
+  );
+  window.scrollTo({top:0, behavior:"smooth"});
+  if (name === "discover") searchPosts();
+  if (name === "profile") {
+    document.getElementById("edit-name").value = userName;
+    document.getElementById("edit-bio").value = userBio;
+  }
+}
+
+function searchPosts() {
+  const query = document.getElementById("search").value.trim().toLowerCase();
+  const results = posts.filter(p =>
+    [p.title,p.caption,p.cat,p.creator,p.tags].join(" ").toLowerCase().includes(query)
+  );
+  renderCards(results, "search-results");
+}
+
+function saveProfile() {
+  const name = document.getElementById("edit-name").value.trim();
+  const bio = document.getElementById("edit-bio").value.trim();
+  userName = name || "Berry Creator";
+  userBio = bio || "Learning, creating and sharing.";
+  document.getElementById("profile-name").textContent = userName;
+  document.getElementById("profile-bio").textContent = userBio;
+  alert("Profile updated in this page. A refresh may reset it.");
+}
+
+document.getElementById("media").addEventListener("change", function() {
+  const file = this.files && this.files[0];
+  if (!file) return;
+  if (file.size > 50 * 1024 * 1024) {
+    alert("Please choose a file smaller than 50 MB for this demo.");
+    this.value = "";
+    return;
+  }
+  if (selectedMediaURL) URL.revokeObjectURL(selectedMediaURL);
+  selectedMediaURL = URL.createObjectURL(file);
+  const video = document.getElementById("video-preview");
+  const img = document.getElementById("image-preview");
+  video.hidden = true;
+  img.hidden = true;
+  if (file.type.startsWith("video/")) {
+    video.src = selectedMediaURL;
+    video.hidden = false;
+  } else if (file.type.startsWith("image/")) {
+    img.src = selectedMediaURL;
+    img.hidden = false;
+  } else {
+    alert("Please choose a valid photo or video.");
+  }
+});
+
+document.getElementById("post-form").addEventListener("submit", function(event) {
+  event.preventDefault();
+  if (!selectedMediaURL) {
+    alert("Choose a photo or video first.");
+    return;
+  }
+  const title = document.getElementById("post-title").value.trim();
+  if (!title) {
+    alert("Please enter a title.");
+    return;
+  }
+  const cat = document.getElementById("post-category").value;
+  const file = document.getElementById("media").files[0];
+  const post = {
+    id:Date.now(),
+    cat,
+    emoji:cat === "STEM" ? "🔬" : cat === "DRAMA" ? "🎭" : "🤝",
+    art:cat === "STEM" ? "stem" : cat === "DRAMA" ? "drama" : "community",
+    title,
+    caption:document.getElementById("post-caption").value.trim(),
+    creator:userName,
+    handle:"@localcreator",
+    series:"Creator post",
+    tags:"#BerryIsReal",
+    local:true,
+    mediaName:file.name,
+    likes:0
+  };
+  posts.unshift(post);
+  document.getElementById("create-status").textContent =
+    "Post preview created in this page. The selected media is not uploaded or shared online yet.";
+  this.reset();
+  document.getElementById("video-preview").hidden = true;
+  document.getElementById("image-preview").hidden = true;
+  selectedMediaURL = "";
+  renderFeed();
+  setCategory("FOR YOU");
+  showPage("home");
+});
+
+renderFeed();
+</script>
+</body>
+</html>
