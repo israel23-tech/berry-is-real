@@ -558,5 +558,17 @@ document.getElementById("post-form").addEventListener("submit", function(event) 
 
 renderFeed();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://itlmoetltmcejcnzjjxc.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2Sp4644QU5r-hqQUSR4Xhg_5dZ3s5Gm';
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
 </body>
 </html>
+
