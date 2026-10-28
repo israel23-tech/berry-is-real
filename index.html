@@ -654,6 +654,23 @@ document.getElementById("post-form").addEventListener("submit", function(event) 
 });
 
 renderFeed();
+  
+/* Berry_is real: dismiss opening screen */
+(function () {
+  const splash = document.getElementById('berry-splash');
+  if (!splash) return;
+
+  function hideBerrySplash() {
+    splash.classList.add('is-hidden');
+
+    window.setTimeout(function () {
+      splash.remove();
+    }, 650);
+  }
+
+  window.setTimeout(hideBerrySplash, 1800);
+})();
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
